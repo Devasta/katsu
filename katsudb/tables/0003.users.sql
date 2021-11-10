@@ -1,6 +1,6 @@
 --At some point in future, I would like to have an external portal for members to visit.
 --I don't think we need seperate staff and users table, just make it all the one.
---THe awaitingverification flag will be used for verifying emails.
+--The awaitingverification flag will be used for verifying emails.
 --Password resets can just be done by clearing the password field.
 --TokenID  is used for session tokens by flask_login, when we reset someones password we should also update that.
 

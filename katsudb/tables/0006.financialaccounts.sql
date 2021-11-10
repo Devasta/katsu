@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS financialaccounts (
     accounttype char(1) NOT NULL REFERENCES accounttypes(accounttype),
     accountgroup char(4) NOT NULL, --SAVE, LOAN, INTL.
     entrydate timestamp NOT NULL DEFAULT NOW(),
-    currentbalance numeric(10,2) NOT NULL DEFAULT 0
+    currentbalance numeric(10,2) NOT NULL DEFAULT 0,
+    currency char(3) NOT NULL REFERENCES currencies(currencyID)
   );
 CREATE INDEX IF NOT EXISTS financialaccounts_accountype_NUI on financialaccounts(accounttype);

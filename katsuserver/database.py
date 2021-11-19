@@ -44,15 +44,16 @@ class db:
 
                 def run_sql_files(directory):
                     for file in os.listdir(directory):
-                        with open(file) as f:
+                        print(directory + file)
+                        with open(directory + file) as f:
                             sql = f.read()
                             cur.execute(sql)
 
-                run_sql_files((os.path.dirname(__file__) + '/../../katsudb/tables/'))
-                #run_sql_files((os.path.dirname(__file__) + '/../../katsudb/Views.sql'))
-                #run_sql_files((os.path.dirname(__file__) + '/../../katsudb/Functions.sql'))
-                #run_sql_files((os.path.dirname(__file__) + '/../../katsudb/Records.sql'))
-                #run_sql_files((os.path.dirname(__file__) + '/../../katsudb/SEPABICs.sql'))
+                run_sql_files('katsudb\\tables\\')
+                run_sql_files('katsudb\\tables\\')
+                run_sql_files('katsudb\\tables\\')
+                run_sql_files('katsudb\\tables\\')
+                run_sql_files('katsudb\\tables\\')
 
         conn.commit()
         return

@@ -1,11 +1,11 @@
 import flask
 import flask_login
-from app.blueprints.configs import configs
+from . import configs
 from . import forms
 from . import models
 import psycopg2
 
-from app.models import requires_permission
+from ...models import requires_permission
 
 
 @configs.route('/', methods=['GET'])

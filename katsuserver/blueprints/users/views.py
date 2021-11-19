@@ -3,9 +3,8 @@ import flask_login
 from . import users
 from . import forms
 from . import models
-import app.models
 
-from app.models import get_config, get_codelink
+from ...models import get_config, get_codelink
 
 """
     NEVER EVER CREATE A METHOD TO EDIT TRANSACTIONS.

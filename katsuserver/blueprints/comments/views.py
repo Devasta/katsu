@@ -1,10 +1,10 @@
 import flask
 import flask_login
-from app.blueprints.comments import comments
+from . import comments
 from . import forms
 from . import models
 
-from app.models import requires_permission, get_config
+from ...models import requires_permission, get_config
 
 
 # Important Note: Do NOT create a URL that'll allow updating or deletion of comments, except to have a custom 405 error.

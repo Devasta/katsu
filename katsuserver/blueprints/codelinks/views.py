@@ -1,11 +1,11 @@
 import flask
 import flask_login
-from app.blueprints.codelinks import codelinks
+from . import codelinks
 from . import forms
 from . import models
 
 
-from app.models import requires_permission
+from ...models import requires_permission
 
 
 @codelinks.route('/', methods=['GET'])

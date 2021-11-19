@@ -1,4 +1,8 @@
 import flask
+import flask_login
+import flask_wtf
+import wtforms_json
+import config
 
 
 def create_app(config_name='default'):
@@ -10,8 +14,9 @@ def create_app(config_name='default'):
 
         config.config[config_name].init_app(app)
 
-    from app import models
+    from . import models
     app.models = models
+
 
     LoginManager = flask_login.LoginManager()
     LoginManager.init_app(app)
@@ -30,14 +35,22 @@ def create_app(config_name='default'):
     csrf.init_app(app)
     wtforms_json.init()
 
-    from app import errors
+    from . import errors
     errors.register_errorhandlers(app)
 
-    from app import views
+    from . import views
     views.register_views(app)
 
-    from app import database
+    from . import database
     app.db = database.db()
     app.db.init_app(app)
+
+    from .blueprints.codelinks import codelinks
+    app.register_blueprint(codelinks)
+    from .blueprints.comments import comments
+    app.register_blueprint(comments)
+    from .blueprints.configs import configs
+    app.register_blueprint(configs)
+
 
     return app

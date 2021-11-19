@@ -42,16 +42,17 @@ class db:
                             {'schema': psycopg2.extensions.AsIs(self.schema)}
                             )
 
-                def run_sql_file(file):
-                    with open(file) as f:
-                        sql = f.read()
-                        cur.execute(sql)
+                def run_sql_files(directory):
+                    for file in os.listdir(directory):
+                        with open(file) as f:
+                            sql = f.read()
+                            cur.execute(sql)
 
-                run_sql_file((os.path.dirname(__file__) + '/../../katsudb/Tables.sql'))
-                run_sql_file((os.path.dirname(__file__) + '/../../katsudb/Views.sql'))
-                run_sql_file((os.path.dirname(__file__) + '/../../katsudb/Functions.sql'))
-                run_sql_file((os.path.dirname(__file__) + '/../../katsudb/Records.sql'))
-                run_sql_file((os.path.dirname(__file__) + '/../../katsudb/SEPABICs.sql'))
+                run_sql_files((os.path.dirname(__file__) + '/../../katsudb/tables/'))
+                #run_sql_files((os.path.dirname(__file__) + '/../../katsudb/Views.sql'))
+                #run_sql_files((os.path.dirname(__file__) + '/../../katsudb/Functions.sql'))
+                #run_sql_files((os.path.dirname(__file__) + '/../../katsudb/Records.sql'))
+                #run_sql_files((os.path.dirname(__file__) + '/../../katsudb/SEPABICs.sql'))
 
         conn.commit()
         return

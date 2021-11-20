@@ -1,11 +1,11 @@
 import flask
 import flask_login
-from app.blueprints.loans import loans
+from . import loans
 from . import forms
 from . import models
 import psycopg2
 
-from app.models import requires_permission, get_config
+from ...models import requires_permission, get_config
 
 
 @loans.route('/', methods=['GET'])

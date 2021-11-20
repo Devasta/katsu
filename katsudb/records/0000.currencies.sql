@@ -1,4 +1,4 @@
-INSERT INTO hermes.currencies
+INSERT INTO currencies
   (currencyID, symbol, currencyname)
 VALUES
   ('EUR', '€', 'Euro');

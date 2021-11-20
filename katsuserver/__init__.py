@@ -17,7 +17,6 @@ def create_app(config_name='default'):
     from . import models
     app.models = models
 
-
     LoginManager = flask_login.LoginManager()
     LoginManager.init_app(app)
     LoginManager.session_protection = "strong"
@@ -51,6 +50,5 @@ def create_app(config_name='default'):
     app.register_blueprint(comments)
     from .blueprints.configs import configs
     app.register_blueprint(configs)
-
 
     return app

@@ -1,14 +1,9 @@
 import flask
 import flask_login
-#import flask_wtf.csrf
-#from . import forms
+from . import schemas
 
 
 def register_views(app):
-
-    @app.route('/CSRF/', methods=['GET'])
-    def csrf():
-        return flask.jsonify({'CSRF': flask_wtf.csrf.generate_csrf()}), 200
 
     @app.route('/login/', methods=['GET'])
     @flask_login.login_required
@@ -17,8 +12,8 @@ def register_views(app):
 
     @app.route('/login/', methods=['POST'])
     def login():
-        #form = forms.LoginForm.from_json(flask.request.json)
-        #if form.validate():
+        schema = schemas.LoginSchema(flask.request.json)
+        if schema.validate():
             try:
                 loggeduser = app.models.User()
                 if loggeduser.validateid(email=flask.request.json['email'],
@@ -29,8 +24,8 @@ def register_views(app):
                     flask.abort(401)
             except ValueError:
                 flask.abort(401)
-        #else:
-#            return flask.abort(400, form.errors)
+        else:
+            return flask.abort(400, schema.errors)
 
     @app.route('/login/', methods=['DELETE'])
     @flask_login.login_required

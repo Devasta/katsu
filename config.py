@@ -57,8 +57,8 @@ class TestConfig(Config):
         level=logging.DEBUG,
         filename='TestLogs.log',
         format='%(asctime)s\t%(levelname)s\t%(threadName)s\t%(name)s\t%(funcName)s:%(lineno)d\t%(message)s',
-        datefmt='%Y%m%dT%H:%M:%S %Z',
-        handlers=[logging.StreamHandler(sys.stdout)]
+        datefmt='%Y%m%dT%H:%M:%S %Z'
+        #handlers=[logging.StreamHandler(sys.stdout)]
     )
     TESTING = True
     ###
@@ -75,8 +75,8 @@ class TestConfig(Config):
 
 
 config = {
-    'development': DevelopmentConfig,
-    'testing': TestConfig,
+    'development': ProductionConfig,
+    'testing': ProductionConfig,
     'production': ProductionConfig,
-    'default': DevelopmentConfig
+    'default': ProductionConfig
 }

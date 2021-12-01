@@ -3,7 +3,7 @@ import flask_login
 from . import configs
 from . import forms
 from . import models
-import psycopg2
+from . import schemas
 
 from ...models import requires_permission
 
@@ -12,6 +12,8 @@ from ...models import requires_permission
 @flask_login.login_required
 @requires_permission('configs_get')
 def all_configs():
+
+    schema = schemas.ConfigSchema(flask.request.json)
 
     form = forms.ConfigSearchForm.from_json(formdata=flask.request.args)
 
@@ -33,28 +35,28 @@ def all_configs():
 @configs.route('/', methods=['POST'])
 @flask_login.login_required
 @requires_permission('configs_create')
-def new_codelink():
+def new_config():
+    flask.current_app.logger.info(flask.request.json)
+    schema = schemas.ConfigSchema(data=flask.request.json)
 
-    form = forms.ConfigsForm.from_json(formdata=flask.request.json)
-
-    if form.validate():
+    if schema.validate():
         try:
-            models.config_create(configname=form.configname.data,
-                                 configvalue=form.configvalue.data,
-                                 description=form.description.data)
+            models.config_create(configname=flask.request.json['configname'],
+                                 configvalue=flask.request.json['configvalue'],
+                                 description=flask.request.json['description'])
             return '', 201
         except KeyError:
             flask.abort(409)
         except Exception as e:
             flask.abort(500, e)
     else:
-        flask.abort(400, form.errors)
+        flask.abort(400, schema.errors)
 
 
 @configs.route('/<string:config>/', methods=['PUT'])
 @flask_login.login_required
 @requires_permission('configs_update')
-def edit_codelink(config):
+def edit_config(config):
 
     form = forms.ConfigsForm.from_json(formdata=flask.request.json)
 

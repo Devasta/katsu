@@ -1,7 +1,7 @@
 import flask
 import flask_login
-import flask_wtf.csrf
-from . import forms
+#import flask_wtf.csrf
+#from . import forms
 
 
 def register_views(app):
@@ -17,20 +17,20 @@ def register_views(app):
 
     @app.route('/login/', methods=['POST'])
     def login():
-        form = forms.LoginForm.from_json(flask.request.json)
-        if form.validate():
+        #form = forms.LoginForm.from_json(flask.request.json)
+        #if form.validate():
             try:
                 loggeduser = app.models.User()
-                if loggeduser.validateid(email=form.email.data,
-                                         password=form.password.data):
+                if loggeduser.validateid(email=flask.request.json['email'],
+                                         password=flask.request.json['password']):
                     flask_login.login_user(loggeduser)
                     return '', 201
                 else:
                     flask.abort(401)
             except ValueError:
                 flask.abort(401)
-        else:
-            return flask.abort(400, form.errors)
+        #else:
+#            return flask.abort(400, form.errors)
 
     @app.route('/login/', methods=['DELETE'])
     @flask_login.login_required

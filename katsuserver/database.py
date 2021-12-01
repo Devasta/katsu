@@ -43,7 +43,7 @@ class db:
                             )
 
                 def run_sql_files(directory):
-                    for file in os.listdir(directory):
+                    for file in os.listdir(os.path.join(os.path.dirname(__file__), '..', directory)):
                         with open(directory + file) as f:
                             sql = f.read()
                             cur.execute(sql)
@@ -89,7 +89,7 @@ class db:
                 raise KeyError(e.diag.message_primary)
             elif e.pgcode == '23505':  # Duplicate Key Error
                 raise KeyError(e.diag.message_primary)
-            elif e.pgcode == '23514': # Check constraint fail
+            elif e.pgcode == '23514':  # Check constraint fail
                 raise ValueError(e.diag.message_primary)
             elif e.pgcode == 'P0001':  # Missing Key Error
                 raise ValueError(e.diag.message_primary)

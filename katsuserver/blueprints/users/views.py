@@ -1,7 +1,7 @@
 import flask
 import flask_login
 from . import users
-from . import forms
+#from . import forms
 from . import models
 
 from ...models import get_config, get_codelink

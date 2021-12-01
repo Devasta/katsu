@@ -12,8 +12,8 @@ class Config:
 
 class ProductionConfig(Config):
     logging.basicConfig(
-        level=logging.NOTSET,
-        filename='TestLogs.log',
+        level=logging.DEBUG,
+        filename='Prodlogs.log',
         format='%(asctime)s\t%(levelname)s\t%(threadName)s\t%(name)s\t%(funcName)s:%(lineno)d\t%(message)s',
         datefmt='%Y%m%dT%H:%M:%S %Z'
     )
@@ -33,7 +33,7 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     logging.basicConfig(
-        level=logging.NOTSET,
+        level=logging.DEBUG,
         filename='DevLogs.log',
         format='%(asctime)s\t%(levelname)s\t%(threadName)s\t%(name)s\t%(funcName)s:%(lineno)d\t%(message)s',
         datefmt='%Y%m%dT%H:%M:%S %Z'

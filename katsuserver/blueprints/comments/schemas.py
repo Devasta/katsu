@@ -1,25 +1,21 @@
 import jsonschema
 
 
-class CodelinkSchema:
+class CommentSchema:
 
     def __init__(self, data):
         self.schema = {
             'type': 'object',
             'properties': {
-                'codelinkname': {
-                    'type': 'string',
-                    'required': True,
-                    'maxLength': 20
-                },
                 'accountid': {
                     'type': 'integer',
                     'required': True
                 },
-                'description': {
+                'commenttext': {
                     'type': 'string',
                     'required': True,
-                    'maxLength': 50
+                    'minLength': 1,
+                    'maxLength': 200
                 }
             }
         }
@@ -37,18 +33,17 @@ class CodelinkSchema:
             return False
 
 
-class CodelinkSearchSchema:
+class CommentSearchSchema:
 
     def __init__(self, data):
         self.schema = {
             'type': 'object',
             'properties': {
-                'codelinkname': {
-                    'type': 'string',
-                    'required': False,
-                    'maxLength': 20
-                },
                 'accountid': {
+                    'type': 'integer',
+                    'required': False
+                },
+                'memberid': {
                     'type': 'integer',
                     'required': False
                 }

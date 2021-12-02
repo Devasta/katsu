@@ -1,7 +1,7 @@
 import flask
 import flask_login
 from . import documents
-from . import forms
+from . import schemas
 from . import models
 import os
 
@@ -16,9 +16,11 @@ from ...models import requires_permission, get_config
 @flask_login.login_required
 def document_search():
 
-    form = forms.documentsearchform(flask.request.args)
+    schema = schemas.ConfigSearchSchema(data=flask.request.args)
 
-    if form.validate():
+    #form = forms.documentsearchform(flask.request.args)
+
+    if schema.validate():
         try:
             try:
                 if flask.request.args.get('page') > 1:
@@ -31,8 +33,8 @@ def document_search():
             limit = flask.request.args.get('limit') or get_config('PAGINATION_COUNT')['configvalue']
 
             documents = models.documents_get(
-                                             accountid=form.accountid.data,
-                                             memberid=form.memberid.data,
+                                             accountid=flask.request.args.get('accountid'),
+                                             memberid=flask.request.args.get('memberid'),
                                              offset=((page - 1)*int(limit)),
                                              limit=int(limit)
                                              )
@@ -43,7 +45,7 @@ def document_search():
         except Exception as e:
             flask.abort(500, e)
     else:
-        flask.abort(400, form.errors)
+        flask.abort(400, schema.errors)
 
 
 @documents.route('/<int:documentid>/', methods=['GET'])
@@ -69,10 +71,25 @@ def document_download(documentid):
 @documents.route('/', methods=['POST'])
 @flask_login.login_required
 def document_upload():
-
-    form = forms.documentuploadform()
-
-    if form.validate():
+    pass
+    '''
+        TODO figure out how to upload files and validate with jsonschema.
+        
+        WTForms has something like this
+        
+    class documentuploadform(flask_wtf.FlaskForm):
+        accountid = wtforms.IntegerField('accountid',
+                                       validators=[wtforms.validators.InputRequired()
+                                                   ])
+        document = wtforms.FileField('document',
+                                     validators=[wtforms.validators.InputRequired()
+                                                 ])
+        description = wtforms.StringField('description',
+                                     validators=[wtforms.validators.InputRequired()
+                                                 ])
+    '''
+    '''
+    if schema.validate():
         try:
             directory = get_config('DOCUMENT_ARCHIVE')['configvalue']
 
@@ -87,4 +104,5 @@ def document_upload():
         except Exception as e:
             flask.abort(500, e)
     else:
-        flask.abort(400, form.errors)
+        flask.abort(400, schema.errors)
+    '''

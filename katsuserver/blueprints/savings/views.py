@@ -1,7 +1,7 @@
 import flask
 import flask_login
 from . import savings
-from . import forms
+from . import schemas
 from . import models
 
 from ...models import requires_permission, get_config
@@ -12,9 +12,9 @@ from ...models import requires_permission, get_config
 @requires_permission('savings_get')
 def savingsaccount_search():
 
-    form = forms.SavingsSearchForm(formdata=flask.request.args)
+    schema = schemas.SavingSearchSchema(data=flask.request.args)
 
-    if form.validate():
+    if schema.validate():
         try:
             # If the user does not provide a pagenumber or provides something that is not an integer, we just set to 1.
             try:
@@ -27,9 +27,9 @@ def savingsaccount_search():
 
             limit = flask.request.args.get('limit') or get_config('PAGINATION_COUNT')['configvalue']
 
-            results = models.savingsaccount_get(accountid=form.accountid.data,
-                                                memberid=form.memberid.data,
-                                                status=form.status.data,
+            results = models.savingsaccount_get(accountid=flask.request.args.get('accountid'),
+                                                memberid=flask.request.args.get('memberid'),
+                                                status=flask.request.args.get('status.data'),
                                                 offset=((page - 1)*int(limit)),
                                                 limit=int(limit)
                                                 )
@@ -40,7 +40,7 @@ def savingsaccount_search():
         except Exception as e:
             flask.abort(500, e)
     else:
-        flask.abort(400, form.errors)
+        flask.abort(400, schema.errors)
 
 
 @savings.route('/<int:accountid>/', methods=['GET'])
@@ -63,11 +63,11 @@ def savingsaccount_main(accountid):
 @requires_permission('savings_create')
 def savingsaccount_insert():
 
-    form = forms.SavingsAccountForm.from_json(flask.request.json)
+    schema = schemas.SavingsAccountSchema(data=flask.request.json)
 
-    if form.validate():
+    if schema.validate():
         try:
-            newacc = models.savingsaccount_create(memberid=form.memberid.data)
+            newacc = models.savingsaccount_create(memberid=flask.request.json('memberid'))
 
             return flask.jsonify({'accountid': newacc}), 201
         except KeyError:
@@ -75,4 +75,4 @@ def savingsaccount_insert():
         except Exception as e:
             flask.abort(500, e)
     else:
-        flask.abort(400, form.errors)
+        flask.abort(400, schema.errors)

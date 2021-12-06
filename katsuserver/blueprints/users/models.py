@@ -51,7 +51,6 @@ def create_user(email, forename, surname, password, rolename):
     with flask.current_app.db.db_cursor() as cur:
         hashedpassword = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         cur.execute("""select * from roles""")
-        print(cur.fetchall)
         cur.execute("""INSERT INTO users(email,forename,surname,password, roleid)
                        VALUES (%(email)s,%(forename)s,%(surname)s,%(password)s, 
                        (select roleid from roles where rolename = %(rolename)s)

@@ -40,20 +40,20 @@ def create_app(config_name='default'):
     app.db = database.db()
     app.db.init_app(app)
 
-    #from .blueprints.codelinks import codelinks
-    #app.register_blueprint(codelinks)
-    #from .blueprints.comments import comments
-    #app.register_blueprint(comments)
+    from .blueprints.codelinks import codelinks
+    app.register_blueprint(codelinks)
+    from .blueprints.comments import comments
+    app.register_blueprint(comments)
     from .blueprints.configs import configs
     app.register_blueprint(configs)
     #from .blueprints.documents import documents
     #app.register_blueprint(documents)
     #from .blueprints.loans import loans
     #app.register_blueprint(loans)
-    #from .blueprints.members import members
-    #app.register_blueprint(members)
-    #from .blueprints.savings import savings
-    #app.register_blueprint(savings)
+    from .blueprints.members import members
+    app.register_blueprint(members)
+    from .blueprints.savings import savings
+    app.register_blueprint(savings)
     #from .blueprints.transactions import transactions
     #app.register_blueprint(transactions)
 

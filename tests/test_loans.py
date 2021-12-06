@@ -1,7 +1,7 @@
 import sys
 import unittest
 import traceback
-import app.blueprints.users.models
+import katsuserver.blueprints.users.models
 import flask
 
 
@@ -9,7 +9,7 @@ class LoansTest(unittest.TestCase):
 
     def helper_loginasuser(self, rolename):
         try:
-            app.blueprints.users.models.create_user(
+            katsuserver.blueprints.users.models.create_user(
                 email=f'{rolename.replace(" ", "")}@devasta.ie',
                 password='testpassword',
                 forename='Daniel',
@@ -24,7 +24,7 @@ class LoansTest(unittest.TestCase):
         })
 
     def setUp(self):
-        self.App = app.create_app(config_name='testing')
+        self.App = katsuserver.create_app(config_name='testing')
         self.client = self.App.test_client()
         self.app_context = self.App.app_context()
         self.app_context.push()

@@ -1,9 +1,8 @@
 import flask
 import flask_login
 from . import loans
-from . import forms
+from . import schemas
 from . import models
-import psycopg2
 
 from ...models import requires_permission, get_config
 
@@ -13,9 +12,9 @@ from ...models import requires_permission, get_config
 @requires_permission('loans_get')
 def loan_search():
 
-    form = forms.LoanSearchForm(formdata=flask.request.args)
+    schema = schemas.LoanSearchSchema(data=flask.request.args)
 
-    if form.validate():
+    if schema.validate():
         try:
 
             # If the user does not provide a pagenumber or provides something that is not an integer, we just set to 1.
@@ -29,9 +28,9 @@ def loan_search():
 
             limit = flask.request.args.get('limit') or get_config('PAGINATION_COUNT')['configvalue']
 
-            results = models.loans_get(loanid=form.loanid.data,
-                                       memberid=form.memberid.data,
-                                       status=form.status.data,
+            results = models.loans_get(loanid=flask.request.args.get('loanid'),
+                                       memberid=flask.request.args.get('memberid'),
+                                       status=flask.request.args.get('statusid'),
                                        offset=((page - 1)*int(limit)),
                                        limit=int(limit)
                                        )
@@ -44,7 +43,7 @@ def loan_search():
             response = {'errors': str(e)}
             return flask.jsonify(response), 500, {'ContentType': 'application/json'}
     else:
-        response = {'errors': form.errors}
+        response = {'errors': schema.errors}
         return flask.jsonify(response), 400, {'ContentType': 'application/json'}
 
 
@@ -67,12 +66,14 @@ def loan_get(loanid):
 @flask_login.login_required
 @requires_permission('loans_create')
 def loan_create():
-    form = forms.MainLoanForm.from_json(formdata=flask.request.json)
-    if form.validate('NEW'):
+
+    schema = schemas.LoanSchema(data=flask.request.json)
+
+    if schema.validate('NEW'):
         try:
-            loanid = models.loan_create(memberid=form.memberid.data,
-                                        amount=form.amount.data,
-                                        purpose=form.purpose.data,
+            loanid = models.loan_create(memberid=flask.request.json.get('memberid'),
+                                        amount=flask.request.json.get('amount'),
+                                        purpose=flask.request.json.get('purpose')
                                         )
             return flask.jsonify(loanid), 201
         except KeyError:
@@ -80,7 +81,7 @@ def loan_create():
         except Exception as e:
             flask.abort(500, e)
     else:
-        flask.abort(400, form.errors)
+        flask.abort(400, schema.errors)
 
 
 @loans.route('/<int:loanid>/', methods=['PATCH'])
@@ -88,8 +89,9 @@ def loan_create():
 @requires_permission('loans_update')
 def loan_update(loanid):
 
-    form = forms.MainLoanForm.from_json(formdata=flask.request.json)
-    if form.validate('UPDATE'):
+    schema = schemas.LoanSchema(data=flask.request.json)
+
+    if schema.validate('UPDATE'):
 
         loan = models.loans_get(loanid=loanid)
 
@@ -99,7 +101,7 @@ def loan_update(loanid):
             flask.abort(400, 'Cannot amend closed loan')
         else:
             try:
-                models.loan_update(loanid=loanid, userid=flask_login.current_user.userid, original=loan[0], updates=form.patch_data)
+                models.loan_update(loanid=loanid, userid=flask_login.current_user.userid, original=loan[0], updates=flask.request.json)
                 return '', 204
             except ValueError as e:
                 if str(e).startswith('User loan approval limit is'):
@@ -109,4 +111,4 @@ def loan_update(loanid):
             except Exception as e:
                 flask.abort(500, e)
     else:
-        flask.abort(400, form.errors)
+        flask.abort(400, schema.errors)

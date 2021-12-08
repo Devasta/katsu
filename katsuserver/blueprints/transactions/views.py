@@ -1,7 +1,7 @@
 import flask
 import flask_login
 from . import transactions
-from . import forms
+from . import schemas
 from . import models
 
 from ...models import get_config, get_codelink, account_details_get, transaction_create
@@ -16,9 +16,9 @@ from ...models import get_config, get_codelink, account_details_get, transaction
 @flask_login.login_required
 def financial_transactions_search():
 
-    form = forms.TransactionSearchForm.from_json(formdata=flask.request.args)
+    schema = schemas.TransactionSearchSchema(data=flask.request.args)
 
-    if form.validate():
+    if schema.validate():
         try:
 
             # If the user does not provide a pagenumber or provides something that is not an integer, we just set to 1.
@@ -32,8 +32,8 @@ def financial_transactions_search():
 
             limit = flask.request.args.get('limit') or get_config('PAGINATION_COUNT')['configvalue']
 
-            transactions = models.transaction_get(transactionid=form.transactionid.data,
-                                                  accountid=form.accountid.data,
+            transactions = models.transaction_get(transactionid=flask.request.json.get('transactionid'),
+                                                  accountid=flask.request.json.get('accountid'),
                                                   offset=((page - 1) * int(limit)),
                                                   limit=int(limit)
                                                   )
@@ -44,7 +44,7 @@ def financial_transactions_search():
         except Exception as e:
             flask.abort(500, e)
     else:
-        flask.abort(400, form.errors)
+        flask.abort(400, schema.errors)
 
 
 @transactions.route('/<int:transactionid>/', methods=['GET'])
@@ -81,11 +81,11 @@ def financial_transaction_new():
         flask.abort(400, 'Invalid Transaction booking mode set.')
 
     if mode == 'basic':
-        form = forms.BasicTransactionForm.from_json(formdata=flask.request.json)
+        schema = schemas.BasicTransactionSchema(data=flask.request.json)
 
-        if form.validate():
+        if schema.validate():
 
-            account = account_details_get(form.accountid.data)
+            account = account_details_get(flask.request.args.get('accountid'))
 
             if account is None:
                 flask.abort(404)
@@ -95,33 +95,41 @@ def financial_transaction_new():
 
                 if account['accountgroup'] in ['SAVE', 'LOAN']:
 
-                    description = form.description.data
+                    description = flask.request.json.get('description')
                     transactions = [
-                        (form.accountid.data, True  if (form.amount.data > 0 and account['debitincrease'] is True) else False, abs(form.amount.data)),
-                        (cashacc,             False if (form.amount.data > 0 and account['debitincrease'] is True) else True,  abs(form.amount.data))
+                        (
+                            flask.request.json.get('accountid'),
+                            True  if (flask.request.json.get('amount') > 0 and account['debitincrease'] is True) else False,
+                            abs(flask.request.json.get('amount'))
+                        ),
+                        (
+                            cashacc,
+                            False if (flask.request.json.get('amount') > 0 and account['debitincrease'] is True) else True,
+                            abs(flask.request.json.get('amount'))
+                        )
                     ]
                 else:
                     flask.abort(400, 'Account is not a savings or loan.')
 
         else:
-            flask.abort(400, form.errors)
+            flask.abort(400, schema.errors)
 
     elif mode == 'explicit':
 
-        form = forms.TransactionMainForm.from_json(formdata=flask.request.json)
+        schema = schemas.DetailedTransactionSchema(data=flask.request.json)
 
-        if form.validate():
+        if schema.validate():
 
-            description = form.description.data
+            description = flask.request.json.get('description')
             transactions = []
-            for entry in form.entries.data:
+            for entry in flask.request.json.get('entries'):
                 t = (entry['accountid'],
                      True if entry['debit'] == 'Debit' else False,
                      entry['amount'])
                 transactions.append(t)
 
         else:
-            flask.abort(400, form.errors)
+            flask.abort(400, schema.errors)
 
     else:
         flask.abort(400, 'Invalid Transaction booking mode set.')

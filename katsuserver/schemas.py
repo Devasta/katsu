@@ -16,7 +16,8 @@ class LoginSchema:
                     'type': 'string',
                     'required': True
                 }
-            }
+            },
+            'required': ['email', 'password']
         }
         self.data = data
         self.errors = []
@@ -24,9 +25,10 @@ class LoginSchema:
     def validate(self):
         self.errors = []
         v = jsonschema.Draft202012Validator(self.schema)
-
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            #print(v.iter_errors(self.data))
+            #print(v.iter_errors())
+            self.errors = [error.message for error in v.iter_errors(self.data)]
             return False

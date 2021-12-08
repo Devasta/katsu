@@ -1,7 +1,7 @@
 import flask
 import flask_login
 from . import users
-#from . import forms
+from . import schemas
 from . import models
 
 from ...models import get_config, get_codelink
@@ -16,9 +16,9 @@ from ...models import get_config, get_codelink
 @flask_login.login_required
 def users_get():
 
-    form = forms.UserSearchForm.from_json(formdata=flask.request.args)
+    schema = schemas.usersearchschema(data=flask.request.args)
 
-    if form.validate():
+    if schema.validate():
         try:
 
             # If the user does not provide a pagenumber or provides something that is not an integer, we just set to 1.
@@ -33,9 +33,9 @@ def users_get():
             limit = flask.request.args.get('limit') or get_config('PAGINATION_COUNT')['configvalue']
 
             users = models.users_get(
-                                    userid=form.userid.data,
-                                    memberid=form.memberid.data,
-                                    email=form.email.data,
+                                    userid=flask.request.args.get('userid'),
+                                    memberid=flask.request.args.get('memberid'),
+                                    email=flask.request.args.get('email'),
                                     offset=((page - 1) * int(limit)),
                                     limit=int(limit)
             )
@@ -47,7 +47,7 @@ def users_get():
         except Exception as e:
             flask.abort(500, e)
     else:
-        flask.abort(400, form.errors)
+        flask.abort(400, schema.errors)
 
 
 @users.route('/users/<int:userid>/', methods=['GET'])

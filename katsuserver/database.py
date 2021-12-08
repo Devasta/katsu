@@ -44,7 +44,7 @@ class db:
 
                 def run_sql_files(directory):
                     for file in os.listdir(os.path.join(os.path.dirname(__file__), '..', directory)):
-                        with open(os.path.join(os.path.join(os.path.dirname(__file__), '..', directory), file)) as f: # TODO FIX THIS <------
+                        with open(os.path.join(os.path.join(os.path.dirname(__file__), '..', directory), file)) as f:
                             sql = f.read()
                             cur.execute(sql)
 

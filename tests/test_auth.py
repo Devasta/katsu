@@ -66,7 +66,7 @@ class AuthTests(unittest.TestCase):
 
     def test_invalid_login_data(self):
         user = {
-            'email': 'daniel@devastaie',  # Invalid Email
+            'email': 'daniel@devasta@ie',  # Invalid Email
             'password': 'testpassword'
         }
         response = self.client.post('/login/', json=user)

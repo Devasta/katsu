@@ -72,6 +72,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         self.client.post('/loans/', json=loandata)
@@ -86,6 +87,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         self.client.post('/loans/', json=loandata)
@@ -107,6 +109,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         self.client.delete('/login/')
@@ -126,6 +129,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -141,6 +145,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -151,6 +156,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -161,6 +167,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -180,6 +187,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': 999999,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -190,6 +198,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -206,6 +215,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -224,6 +234,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.patch(f"/loans/99999999/", json=loandata)
@@ -234,6 +245,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -248,6 +260,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -256,6 +269,7 @@ class LoansTest(unittest.TestCase):
                                                                'statusid':'C',
                                                                'closecode': 1
                                                                })
+        print(response2.data)
         self.assertEqual(response2.status_code, 204)
 
     def test_cant_amend_closed_loan(self):
@@ -263,6 +277,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -281,6 +296,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -295,6 +311,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -313,7 +330,8 @@ class LoansTest(unittest.TestCase):
 
     def test_approved_loan_transfers_money(self):
         self.helper_loginasuser('Member Services Officer')
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         response = self.client.post('/savings/', json=accountdata)
         savingsaccount = flask.json.loads(response.data)['accountid']
         self.client.delete('/login/')
@@ -322,6 +340,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -340,7 +359,8 @@ class LoansTest(unittest.TestCase):
 
     def test_cant_approve_loan_without_permission(self):
         self.helper_loginasuser('Member Services Officer')
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         response = self.client.post('/savings/', json=accountdata)
         savingsaccount = flask.json.loads(response.data)['accountid']
         self.client.delete('/login/')
@@ -349,6 +369,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -361,7 +382,8 @@ class LoansTest(unittest.TestCase):
 
     def test_cant_approve_loan_above_limit(self):
         self.helper_loginasuser('Member Services Officer')
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         response = self.client.post('/savings/', json=accountdata)
         savingsaccount = flask.json.loads(response.data)['accountid']
         self.client.delete('/login/')
@@ -370,6 +392,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 1000000,
+                    'currency': 'EUR',
                     'purpose': 'A very nice bicycle.'
                     }
 
@@ -385,12 +408,14 @@ class LoansTest(unittest.TestCase):
 
     def test_cant_approve_loan_missing_data(self):
         self.helper_loginasuser('Member Services Officer')
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         self.client.delete('/login/')
         self.helper_loginasuser('Loan Officer')
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle.'
                     }
         response = self.client.post('/loans/', json=loandata)
@@ -401,7 +426,8 @@ class LoansTest(unittest.TestCase):
 
     def test_cant_close_loan_with_money_still_owed(self):
         self.helper_loginasuser('Member Services Officer')
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         a = self.client.post('/savings/', json=accountdata)
         savingsaccount = flask.json.loads(a.data)['accountid']
         self.client.delete('/login/')
@@ -410,6 +436,7 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
+                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         l = self.client.post('/loans/', json=loandata)

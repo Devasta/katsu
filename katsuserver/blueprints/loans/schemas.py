@@ -8,21 +8,17 @@ class LoanSearchSchema:
             'type': 'object',
             'properties': {
                 'memberid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 },
                 'loanid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 },
                 'status': {
                     'type': 'string',
-                    'required': False,
                     'maxLength': 1
                 },
                 'paymentmethod': {
                     'type': 'string',
-                    'required': False,
                     "enum": ['DD', 'CA']
                 }
             }
@@ -37,7 +33,7 @@ class LoanSearchSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False
 
 
@@ -48,59 +44,53 @@ class LoanSchema:
             'type': 'object',
             'properties': {
                 'memberid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 },
                 'amount': {
                     'type': 'number',
                     'multipleOf': 0.01,  # 2 decimal places precision
-                    'minimum': 0,
-                    'required': False
+                    'minimum': 0
+                },
+                'currency': {
+                    'type': 'string',
+                    'minimum': 3,
+                    'maximum': 3
                 },
                 'purpose': {
                     'type': 'string',
-                    'required': False,
                     'maxLength': 100
                 },
                 'status': {
                     'type': 'string',
-                    'required': False,
                     'maxLength': 1
                 },
                 'interestrate': {
                     'type': 'number',
                     'multipleOf': 0.01,  # 2 decimal places precision
-                    'minimum': 0,
-                    'required': False
+                    'minimum': 0
                 },
                 'paymentmethodid': {
                     'type': 'string',
-                    'required': False,
                     "enum": ['DD', 'CA']
                 },
                 'paymentamount': {
                     'type': 'number',
                     'multipleOf': 0.01,  # 2 decimal places precision
-                    'minimum': 0,
-                    'required': False
+                    'minimum': 0
                 },
                 'nextpaymentdate': {
                     'type': 'string',
-                    'required': False,
                     'format': 'date'
                 },
                 'paymentfrequency': {
                     'type': 'string',
-                    'required': False,
                     "enum": ['M', 'W', 'Q', 'F']
                 },
                 'closecode': {
-                    'type': 'string',
-                    'required': False,
+                    'type': 'integer'
                 },
                 'savingsaccountid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 }
             }
         }
@@ -125,6 +115,8 @@ class LoanSchema:
                     self.errors.append({'memberid': 'memberid cannot be null or empty.'})
                 if self.data.get('amount') is None:
                     self.errors.append({'amount': 'loan amount cannot be null or empty.'})
+                if self.data.get('currency') is None:
+                    self.errors.append({'currency': 'loan amount cannot be null or empty.'})
                 if self.data.get('purpose') is None:
                     self.errors.append({'amount': 'loan purpose cannot be null or empty.'})
                 if self.data.get('statusid') is not None and self.data.get('statusid') != 'P':
@@ -135,6 +127,8 @@ class LoanSchema:
                     self.errors.append({'memberid': "memberid cannot be null or empty. Don't send if not changing."})
                 if 'amount' in self.data and self.data.get('amount') is None:
                     self.errors.append({'amount': "amount cannot be null or empty. Don't send if not changing."})
+                if 'currency' in self.data:
+                    self.errors.append({'currency': "Currency cannot be changed."})
                 if 'purpose' in self.data and self.data.get('purpose') is None:
                     self.errors.append({'purpose': "loan purpose cannot be null or empty. Don't send if not changing."})
                 if 'statusid' in self.data and self.data.get('statusid') is None:
@@ -144,7 +138,7 @@ class LoanSchema:
                 if 'statusid' in self.data and self.data.get('statusid') != 'C' and 'closecode' in self.data:
                     self.errors.append({'statusid':"close reason provided but loan not closing."})
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
 
         if len(self.errors) > 0:
             return False

@@ -8,16 +8,14 @@ class SavingSearchSchema:
             'type': 'object',
             'properties': {
                 'accountid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 },
                 'memberid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'string',
+                    'pattern': r'''[0-9]'''
                 },
                 'status': {
                     'type': 'string',
-                    'required': False,
                     'maxLength': 1
                 }
             }
@@ -32,7 +30,7 @@ class SavingSearchSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False
 
 
@@ -43,10 +41,15 @@ class SavingsAccountSchema:
             'type': 'object',
             'properties': {
                 'memberid': {
-                    'type': 'integer',
-                    'required': True
+                    'type': 'integer'
+                },
+                'currency': {
+                    'type': 'string',
+                    'minimum': 3,
+                    'maximum': 3
                 }
-            }
+            },
+            'required': ['memberid', 'currency']
         }
         self.data = data
         self.errors = []
@@ -58,5 +61,5 @@ class SavingsAccountSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False

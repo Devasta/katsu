@@ -9,19 +9,17 @@ class CodelinkSchema:
             'properties': {
                 'codelinkname': {
                     'type': 'string',
-                    'required': True,
                     'maxLength': 20
                 },
                 'accountid': {
-                    'type': 'integer',
-                    'required': True
+                    'type': 'integer'
                 },
                 'description': {
                     'type': 'string',
-                    'required': True,
                     'maxLength': 50
                 }
-            }
+            },
+            'required': ['codelinkname','accountid','description']
         }
         self.data = data
         self.errors = []
@@ -33,7 +31,7 @@ class CodelinkSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False
 
 
@@ -45,12 +43,10 @@ class CodelinkSearchSchema:
             'properties': {
                 'codelinkname': {
                     'type': 'string',
-                    'required': False,
                     'maxLength': 20
                 },
                 'accountid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 }
             }
         }
@@ -64,5 +60,5 @@ class CodelinkSearchSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False

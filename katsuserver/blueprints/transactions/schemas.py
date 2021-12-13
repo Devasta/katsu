@@ -15,12 +15,10 @@ class TransactionSearchSchema:
             'type': 'object',
             'properties': {
                 'accountid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 },
                 'transactionid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 }
             }
         }
@@ -34,7 +32,7 @@ class TransactionSearchSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False
 
 
@@ -70,7 +68,7 @@ class BasicTransactionSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False
 
 
@@ -82,35 +80,33 @@ class DetailedTransactionSchema:
             'properties': {
                 'description': {
                     'type': 'string',
-                    'required': True,
                     'maxLength': 200
                 },
-            'entries': {
-                'type': 'array',
-                'items': [
-                            {
-                            'type':'object',
+                'entries': {
+                    'type': 'array',
+                    'items': [
+                        {
+                            'type': 'object',
                             'properties': {
                                 'accountid': {
-                                    'type': 'integer',
-                                    'required': True
+                                    'type': 'integer'
                                 },
                                 'debit': {
                                     'type': 'string',
-                                    'required': True,
                                     'enum': ['Debit', 'Credit']
                                 },
                                 'amount': {
                                     'type': 'number',
                                     'multipleOf': 0.01,  # 2 decimal places precision
-                                    'minimum': 0,
-                                    'required': True
+                                    'minimum': 0
                                 }
-                            }
+                            },
+                            'required': ['accountid', 'debit', 'amount']
                         }
                     ]
                 }
-            }
+            },
+            'required': ['description', 'entries']
         }
         self.data = data
         self.errors = []
@@ -122,7 +118,7 @@ class DetailedTransactionSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False
 
 

@@ -8,16 +8,15 @@ class CommentSchema:
             'type': 'object',
             'properties': {
                 'accountid': {
-                    'type': 'integer',
-                    'required': True
+                    'type': 'integer'
                 },
                 'commenttext': {
                     'type': 'string',
-                    'required': True,
                     'minLength': 1,
                     'maxLength': 200
                 }
-            }
+            },
+            'required': ['accountid', 'commenttext']
         }
         self.data = data
         self.errors = []
@@ -29,7 +28,7 @@ class CommentSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False
 
 
@@ -40,12 +39,10 @@ class CommentSearchSchema:
             'type': 'object',
             'properties': {
                 'accountid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 },
                 'memberid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 }
             }
         }
@@ -59,5 +56,5 @@ class CommentSearchSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False

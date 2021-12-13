@@ -64,7 +64,8 @@ class SavingsTests(unittest.TestCase):
 
     def test_can_get_savingsaccounts(self):
         self.helper_loginasuser('Member Services Officer')
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         self.client.post('/savings/', json=accountdata)
         self.client.post('/savings/', json=accountdata)
         self.client.post('/savings/', json=accountdata)
@@ -74,7 +75,8 @@ class SavingsTests(unittest.TestCase):
 
     def test_can_search_savingsaccounts(self):
         self.helper_loginasuser('Member Services Officer')
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         self.client.post('/savings/', json=accountdata)
         self.client.post('/savings/', json=accountdata)
         self.client.post('/savings/', json=accountdata)
@@ -91,7 +93,8 @@ class SavingsTests(unittest.TestCase):
         }
         response = self.client.post('/members/', json=member)
         memberid = flask.json.loads(response.data)['memberid']
-        accountdata = {'memberid': memberid}
+        accountdata = {'memberid': memberid,
+                       'currency': 'EUR'}
         self.client.post('/savings/', json=accountdata)
         self.client.post('/savings/', json=accountdata)
 
@@ -104,7 +107,8 @@ class SavingsTests(unittest.TestCase):
 
     def test_can_get_savingsaccount(self):
         self.helper_loginasuser('Member Services Officer')
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         response = self.client.post('/savings/', json=accountdata)
 
         response = self.client.get(f"/savings/{flask.json.loads(response.data)['accountid']}/")
@@ -116,19 +120,22 @@ class SavingsTests(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_cant_create_savingsaccount_without_login(self):
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         response = self.client.post('/savings/', json=accountdata)
         self.assertEqual(response.status_code, 401)
 
     def test_cant_create_savingsaccount_without_permission(self):
         self.helper_loginasuser('CU Member')
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         response = self.client.post('/savings/', json=accountdata)
         self.assertEqual(response.status_code, 403)
 
     def test_can_create_savingsaccount(self):
         self.helper_loginasuser('Member Services Officer')
-        accountdata = {'memberid': self.memberid}
+        accountdata = {'memberid': self.memberid,
+                       'currency': 'EUR'}
         response = self.client.post('/savings/', json=accountdata)
         self.assertEqual(response.status_code, 201)
 
@@ -140,7 +147,8 @@ class SavingsTests(unittest.TestCase):
 
     def test_cant_create_savingsaccount_invalid_member(self):
         self.helper_loginasuser('Member Services Officer')
-        accountdata = {'memberid': 999999}  # Member that doesn't exist
+        accountdata = {'memberid': 999999,
+                       'currency': 'EUR'}  # Member that doesn't exist
         response = self.client.post('/savings/', json=accountdata)
         self.assertEqual(response.status_code, 404)
 

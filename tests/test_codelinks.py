@@ -44,26 +44,26 @@ class codelinksTests(unittest.TestCase):
 
     def test_can_filter_codelinks(self):
         self.helper_loginasuser(rolename='Sysadmin')
-        response = self.client.get('/codelinks/?codelinkname=CASH_ACCOUNT')
+        response = self.client.get('/codelinks/?codelinkname=CASH_ACCOUNT_EUR')
         self.assertEqual(len(flask.json.loads(response.data)['codelinks']), 1)
 
     def test_cant_update_codelinks_without_login(self):
         codelink = {
-                    'codelinkname': 'CASH_ACCOUNT',
+                    'codelinkname': 'CASH_ACCOUNT_EUR',
                     'accountid': 1,
                     'description': 'Some Description'
         }
-        response = self.client.put('/codelinks/CASH_ACCOUNT/', json=codelink)
+        response = self.client.put('/codelinks/CASH_ACCOUNT_EUR/', json=codelink)
         self.assertEqual(response.status_code, 401)
 
     def test_cant_update_codelinks_without_permission(self):
         codelink = {
-                    'codelinkname': 'CASH_ACCOUNT',
+                    'codelinkname': 'CASH_ACCOUNT_EUR',
                     'accountid': 1,
                     'description': 'Some Description'
         }
         self.helper_loginasuser(rolename='CU Member')
-        response = self.client.put('/codelinks/CASH_ACCOUNT/', json=codelink)
+        response = self.client.put('/codelinks/CASH_ACCOUNT_EUR/', json=codelink)
         self.assertEqual(response.status_code, 403)
 
     def test_cant_update_codelinks_that_doesnt_exist(self):
@@ -78,22 +78,22 @@ class codelinksTests(unittest.TestCase):
 
     def test_cant_update_codelink_missing_data(self):
         codelink = {
-            'codelinkname': 'CASH_ACCOUNT',
+            'codelinkname': 'CASH_ACCOUNT_EUR',
             'accountid': 1
             #'description': 'Some Description'
         }
         self.helper_loginasuser(rolename='Sysadmin')
-        response = self.client.put('/codelinks/CASH_ACCOUNT/', json=codelink)
+        response = self.client.put('/codelinks/CASH_ACCOUNT_EUR/', json=codelink)
         self.assertEqual(response.status_code, 400)
 
     def test_cant_update_codelink_invalid_data(self):
         codelink = {
-            'codelinkname': 'CASH_ACCOUNT',
+            'codelinkname': 'CASH_ACCOUNT_EUR',
             'accountid': 'NEW NAME',
             'description': 'This is an excessively long description, too long for the database in fact.'
         }
         self.helper_loginasuser(rolename='Sysadmin')
-        response = self.client.put('/codelinks/CASH_ACCOUNT/', json=codelink)
+        response = self.client.put('/codelinks/CASH_ACCOUNT_EUR/', json=codelink)
         self.assertEqual(response.status_code, 400)
 
     def test_cant_update_codelink_invalid_URL(self):
@@ -103,17 +103,17 @@ class codelinksTests(unittest.TestCase):
             'description': 'Some Description'
         }
         self.helper_loginasuser(rolename='Sysadmin')
-        response = self.client.put('/codelinks/CASH_ACCOUNT/', json=codelink)
+        response = self.client.put('/codelinks/CASH_ACCOUNT_EUR/', json=codelink)
         self.assertEqual(response.status_code, 400)
 
     def test_can_update_codelink(self):
         codelink = {
-                    'codelinkname': 'CASH_ACCOUNT',
+                    'codelinkname': 'CASH_ACCOUNT_EUR',
                     'accountid': 1,
                     'description': 'Some Description'
         }
         self.helper_loginasuser(rolename='Sysadmin')
-        response = self.client.put('/codelinks/CASH_ACCOUNT/', json=codelink)
+        response = self.client.put('/codelinks/CASH_ACCOUNT_EUR/', json=codelink)
         self.assertEqual(response.status_code, 204)
 
 
@@ -181,8 +181,9 @@ class codelinksTests(unittest.TestCase):
         '''
             If this test returns anything other than 405 not implemented, something disasterous has happened.
         '''
-        response = self.client.delete('/codelinks/CASH_ACCOUNT/')
+        response = self.client.delete('/codelinks/CASH_ACCOUNT_EUR/')
         self.assertEqual(response.status_code, 405)
+
 
 if __name__ == '__main__':
     unittest.main()

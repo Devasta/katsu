@@ -27,9 +27,9 @@ def savingsaccount_search():
 
             limit = flask.request.args.get('limit') or get_config('PAGINATION_COUNT')['configvalue']
 
-            results = models.savingsaccount_get(accountid=flask.request.args.get('accountid'),
-                                                memberid=flask.request.args.get('memberid'),
-                                                status=flask.request.args.get('status.data'),
+            results = models.savingsaccount_get(accountid=int(flask.request.args.get('accountid')) if flask.request.args.get('accountid') is not None else None,
+                                                memberid=int(flask.request.args.get('memberid')) if flask.request.args.get('memberid') is not None else None,
+                                                status=flask.request.args.get('status'),
                                                 offset=((page - 1)*int(limit)),
                                                 limit=int(limit)
                                                 )
@@ -64,10 +64,11 @@ def savingsaccount_main(accountid):
 def savingsaccount_insert():
 
     schema = schemas.SavingsAccountSchema(data=flask.request.json)
-
     if schema.validate():
         try:
-            newacc = models.savingsaccount_create(memberid=flask.request.json('memberid'))
+            newacc = models.savingsaccount_create(memberid=flask.request.json.get('memberid'),
+                                                  currency=flask.request.json.get('currency'),
+                                                  )
 
             return flask.jsonify({'accountid': newacc}), 201
         except KeyError:

@@ -52,7 +52,6 @@ def member_create(entryuserid,
                   homephone,
                   mobilephone,
                   dateofbirth,
-                  gender,
                   companyname=None):
     with flask.current_app.db.db_cursor() as cur:
         cur.execute("""SELECT member_create(%(title)s,
@@ -68,7 +67,6 @@ def member_create(entryuserid,
                                            %(homephone)s,
                                            %(mobilephone)s,
                                            %(dateofbirth)s,
-                                           %(gender)s,
                                            %(entryuserid)s)
                                            """, {'title': title,
                                                  'forename': forename,
@@ -83,7 +81,6 @@ def member_create(entryuserid,
                                                  'homephone': homephone,
                                                  'mobilephone': mobilephone,
                                                  'dateofbirth': dateofbirth,
-                                                 'gender': gender,
                                                  'entryuserid': entryuserid})
         memberid = cur.fetchone()
         return memberid['member_create']
@@ -102,8 +99,7 @@ def member_update(memberid,
                   postcode,
                   homephone,
                   mobilephone,
-                  dateofbirth,
-                  gender):
+                  dateofbirth):
     with flask.current_app.db.db_cursor() as cur:
         cur.execute("""SELECT member_update(
                                             %(memberid)s,
@@ -119,8 +115,7 @@ def member_update(memberid,
                                             %(PostCode)s,
                                             %(HomePhone)s,
                                             %(MobilePhone)s,
-                                            %(DateOfBirth)s,
-                                            %(Gender)s
+                                            %(DateOfBirth)s
                                            )""", {'memberid': memberid,
                                                   'title': title,
                                                   'forename': forename,
@@ -135,5 +130,5 @@ def member_update(memberid,
                                                   'HomePhone': homephone,
                                                   'MobilePhone': mobilephone,
                                                   'DateOfBirth': dateofbirth,
-                                                  'Gender': gender})
+                                                  })
 

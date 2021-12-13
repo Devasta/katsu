@@ -1,8 +1,9 @@
-CREATE OR REPLACE FUNCTION savingsaccount_create(v_memberID integer) RETURNS integer AS  $$
+CREATE OR REPLACE FUNCTION savingsaccount_create(v_memberID integer,
+                                                 v_currency varchar) RETURNS integer AS  $$
     DECLARE inserted_id integer;
     BEGIN
-        INSERT INTO financialaccounts(accounttype,accountgroup)
-            VALUES ('L', 'SAVE')
+        INSERT INTO financialaccounts(accounttype,accountgroup, currency)
+            VALUES ('L', 'SAVE', v_currency)
         RETURNING accountid INTO inserted_id;
 
         INSERT INTO savingsaccounts(savingsaccountID, memberid, status, opendate)

@@ -41,11 +41,12 @@ def loans_get(loanid=None, memberid=None, status=None, offset=0, limit=None):
         return loans
 
 
-def loan_create(memberid, amount, purpose):
+def loan_create(memberid, amount, currency, purpose):
     with flask.current_app.db.db_cursor() as cur:
-        cur.execute("""SELECT loan_create(%(memberid)s, %(amount)s, %(purpose)s) as loanid""",
+        cur.execute("""SELECT loan_create(%(memberid)s, %(amount)s, %(currency)s, %(purpose)s) as loanid""",
                     {'memberid': memberid,
                      'amount': amount,
+                     'currency': currency,
                      'purpose': purpose})
         newloanid = cur.fetchone()
         return newloanid

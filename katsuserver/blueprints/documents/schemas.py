@@ -47,12 +47,10 @@ class ConfigSearchSchema:
             'type': 'object',
             'properties': {
                 'accountid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 },
                 'memberid': {
-                    'type': 'integer',
-                    'required': False
+                    'type': 'integer'
                 }
             }
         }
@@ -66,5 +64,5 @@ class ConfigSearchSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False

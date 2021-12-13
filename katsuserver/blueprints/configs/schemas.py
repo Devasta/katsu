@@ -9,20 +9,18 @@ class ConfigSchema:
             'properties': {
                 'configname': {
                     'type': 'string',
-                    'required': True,
                     'maxLength': 20
                 },
                 'configvalue': {
                     'type': 'string',
-                    'required': True,
                     'maxLength': 50
                 },
                 'description': {
                     'type': 'string',
-                    'required': True,
                     'maxLength': 50
                 }
-            }
+            },
+            'required': ['configname', 'configvalue', 'description']
         }
         self.data = data
         self.errors = []
@@ -34,7 +32,7 @@ class ConfigSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False
 
 
@@ -46,7 +44,6 @@ class ConfigSearchSchema:
             'properties': {
                 'configname': {
                     'type': 'string',
-                    'required': False,
                     'maxLength': 20
                 }
             }
@@ -61,5 +58,5 @@ class ConfigSearchSchema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False

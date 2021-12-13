@@ -7,17 +7,14 @@ class usersearchschema:
             'type': 'object',
             'properties': {
                     'userid': {
-                        'type': 'integer',
-                        'required': False
+                        'type': 'integer'
                     },
                     'memberid': {
-                        'type': 'integer',
-                        'required': False
+                        'type': 'integer'
                     },
                     'email': {
                         'type': 'string',
-                        'format': 'email',
-                        'required': False
+                        'format': 'email'
                     }
             }
         }
@@ -31,5 +28,5 @@ class usersearchschema:
         if v.is_valid(self.data):
             return True
         else:
-            self.errors = [{error.path[0]: error.message} for error in sorted(v.iter_errors(self.data), key=str)]
+            self.errors = [error.message for error in sorted(v.iter_errors(self.data), key=str)]
             return False

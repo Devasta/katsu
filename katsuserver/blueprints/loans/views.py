@@ -73,6 +73,7 @@ def loan_create():
         try:
             loanid = models.loan_create(memberid=flask.request.json.get('memberid'),
                                         amount=flask.request.json.get('amount'),
+                                        currency=flask.request.json.get('currency'),
                                         purpose=flask.request.json.get('purpose')
                                         )
             return flask.jsonify(loanid), 201

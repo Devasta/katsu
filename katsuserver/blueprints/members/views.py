@@ -113,7 +113,8 @@ def member_update(memberid):
 
     if schema.validate():
         try:
-            models.member_update(title=flask.request.json.get('title'),
+            models.member_update(memberid=memberid,
+                                 title=flask.request.json.get('title'),
                                  forename=flask.request.json.get('forename'),
                                  surname=flask.request.json.get('surname'),
                                  companyname=flask.request.json.get('companyname'),

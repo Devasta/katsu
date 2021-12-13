@@ -11,8 +11,8 @@ CREATE OR REPLACE FUNCTION member_update(v_memberid integer,
                                                 v_PostCode varchar,
                                                 v_HomePhone varchar,
                                                 v_MobilePhone varchar,
-                                                v_DateOfBirth date,
-                                                v_Gender varchar ) RETURNS VOID AS  $$
+                                                v_DateOfBirth date
+                                        ) RETURNS VOID AS  $$
     BEGIN
         UPDATE members
             set title = v_title,
@@ -27,8 +27,7 @@ CREATE OR REPLACE FUNCTION member_update(v_memberid integer,
                 PostCode = v_PostCode,
                 HomePhone = v_HomePhone,
                 MobilePhone = v_MobilePhone,
-                DateOfBirth = v_DateOfBirth,
-                Gender = v_Gender
+                DateOfBirth = v_DateOfBirth
         WHERE memberid = v_memberid;
         IF NOT FOUND
             then RAISE EXCEPTION 'Member not found' USING ERRCODE = 'P0002';

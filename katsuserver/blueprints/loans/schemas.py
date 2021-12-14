@@ -8,10 +8,12 @@ class LoanSearchSchema:
             'type': 'object',
             'properties': {
                 'memberid': {
-                    'type': 'integer'
+                    'type': 'string',
+                    'pattern': r'''[0-9]'''
                 },
                 'loanid': {
-                    'type': 'integer'
+                    'type': 'string',
+                    'pattern': r'''[0-9]'''
                 },
                 'status': {
                     'type': 'string',

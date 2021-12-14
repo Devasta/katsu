@@ -8,8 +8,8 @@ def register_errorhandlers(app):
         return flask.jsonify({'error': 'CSRF token missing or expired.'}), 401
 
     @app.errorhandler(400)
-    def error_400(errors):
-        return flask.jsonify({'errors': errors.description}), 400
+    def error_400(e):
+        return flask.jsonify({'errors': e.description}), 400
 
     @app.errorhandler(401)
     def error_401(e):
@@ -17,7 +17,7 @@ def register_errorhandlers(app):
 
     @app.errorhandler(403)
     def error_403(e):
-        return flask.jsonify({'errors': f'Access denied. {e.description}'}), 403
+        return flask.jsonify({'errors': f'Access denied. {e}'}), 403
 
     @app.errorhandler(404)
     def error_404(e):
@@ -33,4 +33,4 @@ def register_errorhandlers(app):
 
     @app.errorhandler(500)
     def error_500(errors):
-        return flask.jsonify({'errors': errors.description}), 500
+        return flask.jsonify({'errors': errors}), 500

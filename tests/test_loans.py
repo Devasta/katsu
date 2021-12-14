@@ -83,14 +83,14 @@ class LoansTest(unittest.TestCase):
         self.assertEqual(len(flask.json.loads(response.data)['loans']), 3)
 
     def test_can_search_loans(self):
-        self.helper_loginasuser('Member Services Officer')
+        self.helper_loginasuser('Manager')
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
                     'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
-        self.client.post('/loans/', json=loandata)
+        r = self.client.post('/loans/', json=loandata)
         self.client.post('/loans/', json=loandata)
         self.client.post('/loans/', json=loandata)
         member = {
@@ -234,7 +234,6 @@ class LoansTest(unittest.TestCase):
         loandata = {
                     'memberid': self.memberid,
                     'amount': 200,
-                    'currency': 'EUR',
                     'purpose': 'Bicycle'
                     }
         response = self.client.patch(f"/loans/99999999/", json=loandata)
@@ -269,7 +268,6 @@ class LoansTest(unittest.TestCase):
                                                                'statusid':'C',
                                                                'closecode': 1
                                                                })
-        print(response2.data)
         self.assertEqual(response2.status_code, 204)
 
     def test_cant_amend_closed_loan(self):

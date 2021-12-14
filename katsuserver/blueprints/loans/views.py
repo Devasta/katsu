@@ -28,8 +28,8 @@ def loan_search():
 
             limit = flask.request.args.get('limit') or get_config('PAGINATION_COUNT')['configvalue']
 
-            results = models.loans_get(loanid=flask.request.args.get('loanid'),
-                                       memberid=flask.request.args.get('memberid'),
+            results = models.loans_get(loanid=int(flask.request.args.get('loanid')) if flask.request.args.get('loanid') is not None else None,
+                                       memberid=int(flask.request.args.get('memberid')) if flask.request.args.get('memberid') is not None else None,
                                        status=flask.request.args.get('statusid'),
                                        offset=((page - 1)*int(limit)),
                                        limit=int(limit)
@@ -106,10 +106,10 @@ def loan_update(loanid):
                 return '', 204
             except ValueError as e:
                 if str(e).startswith('User loan approval limit is'):
-                    flask.abort(403, e)
+                    flask.abort(403, str(e))
                 else:
-                    flask.abort(400, e)
+                    flask.abort(400, str(e))
             except Exception as e:
-                flask.abort(500, e)
+                flask.abort(500, str(e))
     else:
         flask.abort(400, schema.errors)

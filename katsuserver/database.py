@@ -43,17 +43,18 @@ class db:
                             )
 
                 def run_sql_files(directory):
-                    for file in os.listdir(os.path.join(os.path.dirname(__file__), '..', directory)):
-                        with open(os.path.join(os.path.join(os.path.dirname(__file__), '..', directory), file)) as f:
+                    for file in sorted(os.listdir(os.path.join(os.path.dirname(__file__), '..', 'katsudb', directory))):
+                        with open(os.path.join(os.path.join(os.path.dirname(__file__), '..', 'katsudb', directory), file)) as f:
                             sql = f.read()
+                            self.app.logger.info(f'Running SQL file {f}')
                             cur.execute(sql)
 
-                run_sql_files('katsudb\\extensions\\')
-                run_sql_files('katsudb\\types\\')
-                run_sql_files('katsudb\\tables\\')
-                run_sql_files('katsudb\\views\\')
-                run_sql_files('katsudb\\functions\\')
-                run_sql_files('katsudb\\records\\')
+                run_sql_files('extensions')
+                run_sql_files('types')
+                run_sql_files('tables')
+                run_sql_files('views')
+                run_sql_files('functions')
+                run_sql_files('records')
 
         conn.commit()
         return

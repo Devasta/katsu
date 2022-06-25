@@ -4,7 +4,8 @@ import sys
 
 class Config:
     SECRET_KEY = 'STAND_UP_ALL_VICTIMS_OF_OPPRESSION'
-
+    NAMESPACE_URI = 'https://devasta.ie'
+    NAMESPACE_ABBREV = 'katsu'
     @staticmethod
     def init_app(app):
         pass

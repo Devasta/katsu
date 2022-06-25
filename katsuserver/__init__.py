@@ -3,6 +3,7 @@ import flask_login
 #import flask_wtf
 #import wtforms_json
 import config
+import lxml.etree as ET
 
 
 def create_app(config_name='default'):
@@ -56,5 +57,8 @@ def create_app(config_name='default'):
     app.register_blueprint(savings)
     from .blueprints.transactions import transactions
     app.register_blueprint(transactions)
+
+    ET.register_namespace(prefix=app.config.get('NAMESPACE_ABBREV'),
+                          uri=app.config.get('NAMESPACE_URI'))
 
     return app
